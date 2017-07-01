@@ -1,17 +1,12 @@
-# Heroku app: casper-node
-
-A sample Heroku application that cascades [NodeJS][] on [CasperJS][], suitable for web scraping and automation.
-
-> Note: Spooky do not work with [NodeJS v4](https://github.com/SpookyJS/SpookyJS/issues/172) and [npm v3](https://github.com/SpookyJS/SpookyJS/issues/175)
-
-> Now that [phantomjs](https://www.npmjs.com/package/phantomjs) and [casperjs](https://www.npmjs.com/package/casperjs) are both available on npm, it is easier to use [Node.JS buildpack](https://devcenter.heroku.com/articles/nodejs-support) to install them.
+# Heroku app: casper-bot
+[https://github.com/leesei/heroku-casper-node.git]
 
 ## Usage
 
 Example usage:
 
 ```bash
-$ git clone https://github.com/leesei/heroku-casper-node.git
+$ git clone 
 
 $ cd heroku-casper-node
 
@@ -24,10 +19,14 @@ $ git push heroku master
 
 This application uses [buildpack-multi][] to cascade [buildpack-casperjs][] and [buildpack-nodejs][].
 
-```bash
-$ cat .buildpacks 
+## Heroku Buildpack
+
 https://github.com/leesei/heroku-buildpack-casperjs.git
 https://github.com/heroku/heroku-buildpack-nodejs
+
+## Deploy
+```bash
+$ git push heroku master
 ```
 
 [Spooky][] is used for Casper-Node binding, you can replace it with other module of your choice.
