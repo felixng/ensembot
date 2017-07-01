@@ -3,17 +3,34 @@
 var express = require("express");
 var app = express();
 var Spooky = require('spooky');
-var ensembot = require("./showlinks.js");
+var linkbot = require("./showlinks.js");
+var showsbot = require("./shows.js");
 
-ensembot.fetch(10);
+linkbot.fetch(5);
+
+setTimeout(function(){
+    showsbot.fetch(linkbot.links()); 
+}, 7000);
+
 
 app.use(express.logger());
+
+app.get('/links', function(request, response) {
+    if (!linkbot.links()){
+        showsbot.fetch(linkbot.links()); 
+    }
+    response.send(showsbot.shows());
+});
+
 app.get('/', function(request, response) {
-    response.send(ensembot.links());
+    if (!linkbot.links()){
+        showsbot.fetch(linkbot.links()); 
+    }
+    response.send(showsbot.shows());
 });
 
 app.get('/:rows', function(request, response) {
-    ensembot.fetch(request.params.rows);
+    linkbot.fetch(request.params.rows);
     response.send();
 });
 

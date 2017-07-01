@@ -1,15 +1,16 @@
 var Spooky = require('spooky');
+var shows = [];
 const prefix = 'http://www.officiallondontheatre.co.uk'
-var links = '';
 
 function get(){
-    return links;
+    return shows;
 }
 
-function fetch(rows) {
+function fetch(links) {
     var spooky = new Spooky({
           child: {
-              transport: 'http'
+              transport: 'http',
+              port: 8082,
           },
           casper: {
               logLevel: 'debug',
@@ -22,17 +23,27 @@ function fetch(rows) {
               throw e;
           }
 
-          spooky.start(
-              'http://www.officiallondontheatre.co.uk/london-shows/venue/#/?rows=' + rows + '&q=&sort=title_for_sorting_sortable%20asc');
-          spooky.then(function () {
-              this.emit('return', this.evaluate(function () {
-                  links = document.querySelectorAll('.linkedShowsContainer .searchResults a');
+          if (!links){
+              e = new Error('No links to get shows from!');
+              e.details = err;
+              throw e;
+          }
 
-                  return Array.prototype.map.call(links, function (e) {
-                      return e.getAttribute('href')
-                  });
-              }));
+          spooky.each(links, function () {
+              // this.emit('return', this.evaluate(function () {
+              //     // var show = {
+              //     //   // name: document.querySelectorAll('.h1'),
+              //     //   twitter: document.querySelectorAll('a.twitter')[0].getAttribute('href'),
+              //     // };
+
+              //     // var show = {
+              //     //   twitter: 'test',
+              //     // }
+
+              //     // return "1";
+              // }));
           });
+
           spooky.run();
       });
 
@@ -51,11 +62,9 @@ function fetch(rows) {
         console.log(line);
     });
 
-    spooky.on('return', function (result) {
-        links = Array.prototype.map.call(result, function (link) {
-            return prefix + link
-        });
-        console.log(links);
+    spooky.on('return', function (show) {
+        console.log(show);
+        shows.push(show);
     });
 
     spooky.on('log', function (log) {
@@ -66,6 +75,6 @@ function fetch(rows) {
 }
 
 module.exports = {
-  links: get,
   fetch: fetch,
+  shows: get,
 }
