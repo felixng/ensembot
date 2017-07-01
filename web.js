@@ -41,14 +41,14 @@ spooky.on('error', function (e, stack) {
     }
 });
 
-/*
+
 // Uncomment this block to see all of the things Casper has to say.
 // There are a lot.
 // He has opinions.
 spooky.on('console', function (line) {
     console.log(line);
 });
-*/
+
 var gGreeting = 'Hello World';
 
 spooky.on('hello', function (greeting) {
