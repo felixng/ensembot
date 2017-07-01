@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "dependencies": {
     "express": "3.1.x",
-    "spooky": "0.2.x"
+    "spooky": "0.2.x",
+    "tiny-jsonrpc": "^2.0.1"
   },
   "engines": {
     "node": "0.10.x",
