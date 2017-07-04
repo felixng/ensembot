@@ -28,21 +28,40 @@ function fetch(links) {
               e.details = err;
               throw e;
           }
+          
+          // spooky.start(links[0]);
+          // spooky.then(function () {
+          //   this.emit('speak', this.evaluate(function () {
+          //       return document.title;
+          //     })
+          //   );
+          //   // this.emit('speak', this.evaluate(function () {
+          //   //       //links = document.querySelectorAll('.linkedShowsContainer .searchResults a');
 
-          spooky.each(links, function () {
-              // this.emit('return', this.evaluate(function () {
-              //     // var show = {
-              //     //   // name: document.querySelectorAll('.h1'),
-              //     //   twitter: document.querySelectorAll('a.twitter')[0].getAttribute('href'),
-              //     // };
+          //   //       // return Array.prototype.map.call(links, function (e) {
+          //   //       //     return e.getAttribute('href')
+          //   //       // });
+          //   //       return 'document.title';
+          //   //   })
+          //   // );
+          // })
+          
 
-              //     // var show = {
-              //     //   twitter: 'test',
-              //     // }
-
-              //     // return "1";
-              // }));
-          });
+          // spooky.eachThen(links, function () {
+          //     // links.forEach(function(link){
+          //       this.emit('speak', link);
+          //         // spooky.thenOpenAndEvaluate(link, function () {
+          //         //     // this.emit('return', this.evaluate(function () {
+          //         //     //     var show = {
+          //         //     //       // name: document.querySelectorAll('.h1'),
+          //         //     //       twitter: document.querySelectorAll('.twitter').getAttribute('href'),
+          //         //     //     };
+          //         //     //     console.log(show);
+          //         //     //     return show;
+          //         //     // }));
+          //         // }); 
+          //     // });
+          // });
 
           spooky.run();
       });
@@ -58,7 +77,11 @@ function fetch(links) {
     // Uncomment this block to see all of the things Casper has to say.
     // There are a lot.
     // He has opinions.
-    spooky.on('console', function (line) {
+    // spooky.on('console', function (line) {
+    //     console.log(line);
+    // });
+
+    spooky.on('speak', function (line) {
         console.log(line);
     });
 

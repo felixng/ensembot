@@ -1,6 +1,8 @@
 var Spooky = require('spooky');
+var spidy = require('./spidy.js');
 const prefix = 'http://www.officiallondontheatre.co.uk'
-var links = '';
+var links = [];
+
 
 function get(){
     return links;
@@ -16,23 +18,33 @@ function fetch(rows) {
               verbose: true
           }
       }, function (err) {
+          var result = [];
+
           if (err) {
               e = new Error('Failed to initialize SpookyJS');
               e.details = err;
               throw e;
           }
-
           spooky.start(
               'http://www.officiallondontheatre.co.uk/london-shows/venue/#/?rows=' + rows + '&q=&sort=title_for_sorting_sortable%20asc');
           spooky.then(function () {
-              this.emit('return', this.evaluate(function () {
-                  links = document.querySelectorAll('.linkedShowsContainer .searchResults a');
+              result = this.evaluate(function () {
+                      links = document.querySelectorAll('.linkedShowsContainer .searchResults a');
 
-                  return Array.prototype.map.call(links, function (e) {
-                      return e.getAttribute('href')
+                      return Array.prototype.map.call(links, function (e) {
+                          return e.getAttribute('href')
+                      });
                   });
-              }));
           });
+
+          spooky.then(function () {
+              const prefix = 'http://www.officiallondontheatre.co.uk'
+              links = Array.prototype.map.call(result, function (link) {
+                  return prefix + link
+              });
+              this.emit('return', links);
+          });
+
           spooky.run();
       });
 
@@ -47,15 +59,20 @@ function fetch(rows) {
     // Uncomment this block to see all of the things Casper has to say.
     // There are a lot.
     // He has opinions.
-    spooky.on('console', function (line) {
+    // spooky.on('console', function (line) {
+    //     console.log(line);
+    // });
+
+    spooky.on('speak', function (line) {
         console.log(line);
     });
 
     spooky.on('return', function (result) {
-        links = Array.prototype.map.call(result, function (link) {
-            return prefix + link
-        });
+        links = result;
         console.log(links);
+        // links.forEach(function(){
+        //   spidy.run(link);
+        // })
     });
 
     spooky.on('log', function (log) {
