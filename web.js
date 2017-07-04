@@ -5,17 +5,19 @@ var app = express();
 var spidy = require('./spidy.js');
 var linkbot = require("./showlinks.js");
 
-linkbot.fetch(200);
-//save delta to db
+spidy.run();
 
-setTimeout(function(){
-    console.log('================ Starting Individual.. ================')
-    var links = linkbot.links();
+// linkbot.fetch(200);
+//save delta to db??
+
+// setTimeout(function(){
+//     console.log('================ Starting Individual.. ================')
+//     var links = linkbot.links();
     
-    links.forEach(function(link){
-            spidy.run(link);
-    });
-}, 20000);
+//     links.forEach(function(link){
+//             spidy.run(link);
+//     });
+// }, 20000);
 
 
 app.use(express.logger());
