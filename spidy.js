@@ -22,6 +22,12 @@ function crawlShows(url){
         previewFrom: '.show-Meta dl.hr-bottom dd:nth-child(10)',
         openingNight: '.show-Meta dl.hr-bottom dd:nth-child(12)',
         showingUntil: '.show-Meta dl.hr-bottom dd:nth-child(14)',
+        confirmedClosing: {
+          selector: '.show-Meta dl.hr-bottom dt:nth-child(13)',
+          transform: function(){
+            return (this.toString().indexOf('Closing') !== -1);
+          }
+        },
         twitter: { selector: '.twitter',
           get: 'href' },
         facebook: { selector: '.facebook',

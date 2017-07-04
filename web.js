@@ -6,7 +6,8 @@ var spidy = require('./spidy.js');
 var linkbot = require("./showlinks.js");
 
 spidy.run();
-
+spidy.run('http://www.officiallondontheatre.co.uk/london-shows/show/item372366/half-a-sixpence/');
+spidy.run('http://www.officiallondontheatre.co.uk/london-shows/show/item270484/kinky-boots/');
 // linkbot.fetch(200);
 //save delta to db??
 
