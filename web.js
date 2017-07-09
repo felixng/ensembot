@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+require('newrelic');
 var express = require("express");
 var app = express();
 var spidy = require('./scrapy.js');
