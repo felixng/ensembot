@@ -27,6 +27,7 @@ function fetch(rows) {
           }
           spooky.start(
               'http://www.officiallondontheatre.co.uk/london-shows/venue/#/?rows=' + rows + '&q=&sort=title_for_sorting_sortable%20asc');
+          
           spooky.then(function () {
               result = this.evaluate(function () {
                       links = document.querySelectorAll('.linkedShowsContainer .searchResults a');
@@ -69,10 +70,7 @@ function fetch(rows) {
 
     spooky.on('return', function (result) {
         links = result;
-        console.log(links);
-        // links.forEach(function(){
-        //   spidy.run(link);
-        // })
+        console.log('Fetched ' + links.length + ' links');
     });
 
     spooky.on('log', function (log) {

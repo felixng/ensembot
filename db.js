@@ -1,43 +1,72 @@
 var MongoClient = require('mongodb').MongoClient
   , assert = require('assert');
 
-var url =  'mongodb://localhost:27017/ensemblrTest';
+var url =  'mongodb://localhost:27017/ensemblr';
 const productionsCollection = 'productions';
 const theatreCollection = 'theatres';
 
+// var show = { name: 'Kinky Boots',
+//   theatre: 
+//    { name: 'Adelphi Theatre',
+//      address: 'Adelphi Theatre, Strand, London, WC2E 7NA',
+//      website: 'www.adelphitheatre.co.uk' },
+//   genre: 'Musical1',
+//   showTime: 'Mon-Sat 7.30pm, Wed & Sat 2.30pm',
+//   duration: '2h30',
+//   previewFrom: '21.08.2015',
+//   openingNight: '15.09.2015',
+//   showingUntil: '24.03.2018',
+//   confirmedClosing: false,
+//   twitter: 'https://twitter.com/KinkyBootsUK',
+//   facebook: 'https://www.facebook.com/KinkyBootsUK' };
 
-// Use connect method to connect to the Server
-MongoClient.connect(url, function(err, db) {
-  assert.equal(null, err);
-  console.log("Connected correctly to server");
-  var theatre = { 
-  	name: 'Adelphi Theatre 13',
-    address: 'I am not sure13',
-    website: 'www.adelphitheatre.co...uk' 
-  };
+var process = function(show){
+	MongoClient.connect(url, function(err, db) {
+	  assert.equal(null, err);
+	  console.log("Connected correctly to server");
 
-  upsertDocument(theatre, theatreCollection, db, function(){
-  	findAllDocuments(theatreCollection, db, function(){
-  		db.close();
-  	})
-  })
-});
+	  var theatre = show.theatre;
 
-var upsertDocument = function (object, collection, db, callback) {
-	var collection = db.collection(collection);
+	  upsertDocument(theatre, theatreCollection, db, function(id){
+	  	if (id){
+	  		show.theatre = id;
+		  	upsertDocument(show, productionsCollection, db, function(){
+			  	db.close();
+			  	console.log('Mongo Closed.');
+		  	});
+	  	}
+	  })
+	});
+}
+
+var upsertDocument = function (object, collectionName, db, callback) {
+	var collection = db.collection(collectionName);
 	collection.updateOne({ name : object.name }, { $set: object }, { upsert: true },
 		function(err, result) {
-
-			if (result.result.nModified == 1){
-				console.log("Updated the document to: ", object);
-			}
-			if (result.result.upserted) {
-				console.log("Inserted document: ", object);
+			if (err){
+				console.log(err);
+				return;
 			}
 
-			callback(result);
+			if (result.modifiedCount > 0){
+				console.log("Updated document to: ", object);
+			}
+			if (result.upsertedCount > 0) {
+				console.log("Inserted document: ", object, " with Id ", result.upsertedId._id);
+				callback(result.upsertedId._id);
+			}
+
+			console.log('Nothing to Upsert for', collectionName);
+
+			collection.find({ name : object.name }).toArray(function(err, docs) {
+				if (err){
+					console.log(err);
+				}
+				else{
+					callback(docs[0]._id);	
+				}
+			})
 	});  
-
 }
 
 
@@ -50,3 +79,9 @@ var findAllDocuments = function(theatreCollection, db, callback) {
     callback(docs);
   });
 }
+
+// process(show);
+
+module.exports = {
+	process: process,
+};

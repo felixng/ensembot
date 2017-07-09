@@ -1,4 +1,5 @@
 var scrapy = require('node-scrapy')
+var db = require('./db.js')
 
 function crawlShows(url){
   var source = url || 'http://www.officiallondontheatre.co.uk/london-shows/show/item381804/anatomy-of-a-suicide/'
@@ -37,7 +38,7 @@ function crawlShows(url){
   scrapy.scrape(source, show, function(err, data) {
   	if (err) return console.error(err)
       console.log('Crawled show links...')
-      console.log(data);
+      db.process(data);
   });
 
 }
