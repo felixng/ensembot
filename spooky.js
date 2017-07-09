@@ -1,5 +1,4 @@
 var Spooky = require('spooky');
-var spidy = require('./spidy.js');
 const prefix = 'http://www.officiallondontheatre.co.uk'
 var links = [];
 

@@ -1,5 +1,4 @@
-var MongoClient = require('mongodb').MongoClient
-  , assert = require('assert');
+var MongoClient = require('mongodb').MongoClient;
 
 var url = process.env.MONGODB_URI || 'mongodb://localhost:27017/ensemblr';
 const productionsCollection = 'productions';
@@ -20,7 +19,7 @@ const theatreCollection = 'theatres';
 //   twitter: 'https://twitter.com/KinkyBootsUK',
 //   facebook: 'https://www.facebook.com/KinkyBootsUK' };
 
-var process = function(show){
+var execute = function(show){
 	MongoClient.connect(url, function(err, db) {
 	  assert.equal(null, err);
 	  console.log("Connected correctly to server");
@@ -82,5 +81,5 @@ var findAllDocuments = function(theatreCollection, db, callback) {
 // process(show);
 
 module.exports = {
-	process: process,
+	process: execute,
 };

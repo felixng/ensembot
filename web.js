@@ -1,9 +1,8 @@
 #!/usr/bin/env node
-
 var express = require("express");
 var app = express();
-var spidy = require('./spidy.js');
-var linkbot = require("./showlinks.js");
+var spidy = require('./scrapy.js');
+var linkbot = require("./spooky.js");
 
 // spidy.run();
 // spidy.run('http://www.officiallondontheatre.co.uk/london-shows/show/item372366/half-a-sixpence/');
