@@ -19,6 +19,15 @@ const theatreCollection = 'theatres';
 //   twitter: 'https://twitter.com/KinkyBootsUK',
 //   facebook: 'https://www.facebook.com/KinkyBootsUK' };
 
+var logLinks = function(links) {
+	MongoClient.connect(url, function(err, db) {
+	  console.log("Connected correctly to server");
+	  insertLinks(links, db, function(){
+	  	console.log('Links logged');
+	  })
+	}); 
+}
+
 var execute = function(show){
 	MongoClient.connect(url, function(err, db) {
 	  console.log("Connected correctly to server");
@@ -29,11 +38,19 @@ var execute = function(show){
 	  	if (id){
 	  		show.theatre = id;
 		  	upsertDocument(show, productionsCollection, db, function(){
-			  	console.log('Mongo Closed.');
+			  	// console.log('Mongo Closed.');
 		  	});
 	  	}
 	  })
 	});
+}
+
+var insertLinks = function(links, db, callback) {
+  var collection = db.collection('links');
+  
+  collection.insertOne(links, function(err, result) {
+    callback(result);
+  });
 }
 
 var upsertDocument = function (object, collectionName, db, callback) {
@@ -53,7 +70,7 @@ var upsertDocument = function (object, collectionName, db, callback) {
 				callback(result.upsertedId._id);
 			}
 
-			console.log('Nothing to Upsert for', collectionName);
+			console.log('Nothing to Upsert for', object.name);
 
 			collection.find({ name : object.name }).toArray(function(err, docs) {
 				if (err){
@@ -67,8 +84,8 @@ var upsertDocument = function (object, collectionName, db, callback) {
 }
 
 
-var findAllDocuments = function(theatreCollection, db, callback) {
-  var collection = db.collection(theatreCollection);
+var findAllDocuments = function(collectionName, db, callback) {
+  var collection = db.collection(collectionName);
   // Find some documents
   collection.find({}).toArray(function(err, docs) {
   	console.log("============Found the following records=============");
@@ -81,4 +98,5 @@ var findAllDocuments = function(theatreCollection, db, callback) {
 
 module.exports = {
 	process: execute,
+	logLinks: logLinks,
 };

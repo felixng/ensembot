@@ -37,7 +37,7 @@ function crawlShows(url){
 
   scrapy.scrape(source, show, function(err, data) {
   	if (err) return console.error(err)
-      console.log('Crawled show links...')
+      console.log('Crawled show ', data.name);
       db.process(data);
   });
 

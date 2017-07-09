@@ -4,37 +4,44 @@ var express = require("express");
 var app = express();
 var spidy = require('./scrapy.js');
 var linkbot = require("./spooky.js");
+var db = require("./db.js");
 
 // spidy.run();
 // spidy.run('http://www.officiallondontheatre.co.uk/london-shows/show/item372366/half-a-sixpence/');
 // spidy.run('http://www.officiallondontheatre.co.uk/london-shows/show/item270484/kinky-boots/');
-linkbot.fetch(200);
-// //save delta to db??
 
-setTimeout(function(){
+var fetch = function (){
+	linkbot.fetch(200);		
+
+	setTimeout(function(){
+		var result = {
+			date: Date()
+		}
+		result.links = linkbot.links();
+		db.logLinks(result);
+
+		getIndividuals(result.links);
+	}, 20000);
+}
+
+var getIndividuals = function (links){
     console.log('================ Starting Individual.. ================')
-    var links = linkbot.links();
     
     links.forEach(function(link){
-            spidy.run(link);
+        spidy.run(link);
     });
-}, 20000);
+}
 
 app.use(express.logger());
 
-// app.get('/links', function(request, response) {
-//     if (!linkbot.links()){
-//         showsbot.fetch(linkbot.links()); 
-//     }
-//     response.send(showsbot.shows());
-// });
+app.get('/fetch', function(request, response) {
+    fetch();
+    response.send();
+});
 
-// app.get('/', function(request, response) {
-//     if (!linkbot.links()){
-//         showsbot.fetch(linkbot.links()); 
-//     }
-//     response.send(showsbot.shows());
-// });
+app.get('/', function(request, response) {
+    
+});
 
 // app.get('/:rows', function(request, response) {
 //     linkbot.fetch(request.params.rows);
