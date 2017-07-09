@@ -21,7 +21,6 @@ const theatreCollection = 'theatres';
 
 var execute = function(show){
 	MongoClient.connect(url, function(err, db) {
-	  assert.equal(null, err);
 	  console.log("Connected correctly to server");
 
 	  var theatre = show.theatre;
