@@ -20,8 +20,6 @@ setTimeout(function(){
     });
 }, 20000);
 
-
-
 app.use(express.logger());
 
 // app.get('/links', function(request, response) {

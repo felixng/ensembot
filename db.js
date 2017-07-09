@@ -31,7 +31,6 @@ var process = function(show){
 	  	if (id){
 	  		show.theatre = id;
 		  	upsertDocument(show, productionsCollection, db, function(){
-			  	db.close();
 			  	console.log('Mongo Closed.');
 		  	});
 	  	}
