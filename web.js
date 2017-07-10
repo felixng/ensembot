@@ -6,10 +6,6 @@ var spidy = require('./scrapy.js');
 var linkbot = require("./spooky.js");
 var db = require("./db.js");
 
-// spidy.run();
-// spidy.run('http://www.officiallondontheatre.co.uk/london-shows/show/item372366/half-a-sixpence/');
-// spidy.run('http://www.officiallondontheatre.co.uk/london-shows/show/item270484/kinky-boots/');
-
 var fetch = function (){
 	linkbot.fetch(200);		
 
