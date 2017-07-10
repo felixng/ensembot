@@ -70,6 +70,7 @@ function fetch(rows) {
     spooky.on('return', function (result) {
         links = result;
         console.log('Fetched ' + links.length + ' links');
+        spooky.destroy();
     });
 
     spooky.on('log', function (log) {

@@ -2,11 +2,12 @@
 var express = require("express");
 var app = express();
 var spidy = require('./scrapy.js');
-var linkbot = require("./spooky.js");
+
 var db = require("./db.js");
 
 var fetch = function (){
-	linkbot.fetch(200);		
+	var linkbot = require("./spooky.js");
+	linkbot.fetch(200);
 
 	setTimeout(function(){
 		var result = {

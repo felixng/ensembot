@@ -35,6 +35,12 @@ function crawlShows(url){
           get: 'href' } 
       }
 
+  // var options = {
+  //   requestOptions: {
+  //     encoding: 'binary'
+  //   }
+  // }
+
   scrapy.scrape(source, show, function(err, data) {
   	if (err) return console.error(err)
       console.log('Crawled show ', data.name);

@@ -21,7 +21,6 @@ const theatreCollection = 'theatres';
 
 var logLinks = function(links) {
 	MongoClient.connect(url, function(err, db) {
-	  console.log("Connected correctly to server");
 	  insertLinks(links, db, function(){
 	  	console.log('Links logged');
 	  })
@@ -38,7 +37,7 @@ var execute = function(show){
 	  	if (id){
 	  		show.theatre = id;
 		  	upsertDocument(show, productionsCollection, db, function(){
-			  	// console.log('Mongo Closed.');
+			  	console.log('Upsert completed for ', show.name);
 		  	});
 	  	}
 	  })
@@ -47,7 +46,8 @@ var execute = function(show){
 
 var insertLinks = function(links, db, callback) {
   var collection = db.collection('links');
-  
+  links.lastModified = Math.floor(Date.now()).toString();
+
   collection.insertOne(links, function(err, result) {
     callback(result);
   });
@@ -55,6 +55,8 @@ var insertLinks = function(links, db, callback) {
 
 var upsertDocument = function (object, collectionName, db, callback) {
 	var collection = db.collection(collectionName);
+	object.lastModified = Math.floor(Date.now()).toString();
+
 	collection.updateOne({ name : object.name }, { $set: object }, { upsert: true },
 		function(err, result) {
 			if (err){
@@ -94,7 +96,19 @@ var findAllDocuments = function(collectionName, db, callback) {
   });
 }
 
-// process(show);
+function sanitizeStr(s) {
+    return '#' + s;
+}
+
+function iterAll(object) {
+    Object.keys(object).forEach(function (k) {
+        if (object[k] && typeof object[k] === 'object') {
+            iterAll(object[k]);
+            return;
+        }
+        object[k] = sanitizeStr(object[k]);
+    })
+}
 
 module.exports = {
 	process: execute,
