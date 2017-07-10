@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-require('newrelic');
 var express = require("express");
 var app = express();
 var spidy = require('./scrapy.js');
@@ -36,7 +35,7 @@ app.get('/fetch', function(request, response) {
 });
 
 app.get('/', function(request, response) {
-    
+    response.send();
 });
 
 // app.get('/:rows', function(request, response) {
