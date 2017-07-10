@@ -2,6 +2,7 @@
   "name": "casper-node",
   "version": "0.0.1",
   "dependencies": {
+    "decode-html": "^1.0.2",
     "express": "3.1.x",
     "mongodb": "^2.2.29",
     "node-scrapy": "^0.3.1",

@@ -7,7 +7,7 @@ var db = require("./db.js");
 
 var fetch = function (){
 	var linkbot = require("./spooky.js");
-	linkbot.fetch(200);
+	linkbot.fetch(200);		
 
 	setTimeout(function(){
 		var result = {

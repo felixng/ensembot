@@ -1,5 +1,6 @@
-var scrapy = require('node-scrapy')
-var db = require('./db.js')
+var scrapy = require('node-scrapy');
+var db = require('./db.js');
+var decode = require('decode-html');
 
 function crawlShows(url){
   var source = url || 'http://www.officiallondontheatre.co.uk/london-shows/show/item381804/anatomy-of-a-suicide/'
@@ -9,7 +10,7 @@ function crawlShows(url){
           selector: 'h1',
           get: 'html',
           transform: function(){
-            return this.replace(/<small(.*?)small>/, "");
+            return decode(this.replace(/<small(.*?)small>/, ""));
           }
         },
         theatre: {
@@ -33,18 +34,12 @@ function crawlShows(url){
           get: 'href' },
         facebook: { selector: '.facebook',
           get: 'href' } 
-      }
-
-  // var options = {
-  //   requestOptions: {
-  //     encoding: 'binary'
-  //   }
-  // }
+      };
 
   scrapy.scrape(source, show, function(err, data) {
   	if (err) return console.error(err)
       console.log('Crawled show ', data.name);
-      db.process(data);
+      //db.process(data);
   });
 
 }
