@@ -39,7 +39,7 @@ app.get('/fetch', function(request, response) {
 });
 
 app.get('/', function(request, response) {
-    
+    response.send();
 });
 
 // app.get('/:rows', function(request, response) {
