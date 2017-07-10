@@ -4,7 +4,6 @@
   "dependencies": {
     "express": "3.1.x",
     "mongodb": "^2.2.29",
-    "newrelic": "^1.40.0",
     "node-scrapy": "^0.3.1",
     "spooky": "0.2.5",
     "tiny-jsonrpc": "^2.0.1"
