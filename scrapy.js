@@ -1,6 +1,6 @@
 var scrapy = require('node-scrapy');
 var db = require('./db.js');
-var decode = require('decode-html');
+const entities = require('entities');
 
 function crawlShows(url){
   var source = url || 'http://www.officiallondontheatre.co.uk/london-shows/show/item381804/anatomy-of-a-suicide/'
@@ -10,7 +10,7 @@ function crawlShows(url){
           selector: 'h1',
           get: 'html',
           transform: function(){
-            return decode(this.replace(/<small(.*?)small>/, ""));
+            return entities.decodeHTML(this.replace(/<small(.*?)small>/, ""));
           }
         },
         theatre: {
