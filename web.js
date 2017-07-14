@@ -5,8 +5,7 @@ var scrapy = require('./scrapy.js');
 
 var db = require("./db.js");
 
-scrapy.getShow();
-
+// scrapy.getShow();
 var fetch = function (){
 	var spooky = require("./spooky.js");
 	spooky.fetch(200);		
@@ -19,7 +18,7 @@ var fetch = function (){
 		db.logLinks(result);
 
 		getIndividuals(result.links);
-	}, 20000);
+	}, 25000);
 }
 
 var getIndividuals = function (links){
