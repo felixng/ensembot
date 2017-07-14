@@ -67,12 +67,13 @@ var upsertDocument = function (object, collectionName, db, callback) {
 			if (result.modifiedCount > 0){
 				console.log("Updated document to: ", object);
 			}
-			if (result.upsertedCount > 0) {
+			else if (result.upsertedCount > 0) {
 				console.log("Inserted document: ", object, " with Id ", result.upsertedId._id);
 				callback(result.upsertedId._id);
 			}
-
-			console.log('Nothing to Upsert for', object.name);
+			else {
+				console.log('Nothing to Upsert for', object.name);	
+			}
 
 			collection.find({ name : object.name }).toArray(function(err, docs) {
 				if (err){

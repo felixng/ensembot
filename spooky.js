@@ -1,6 +1,6 @@
 var Spooky = require('spooky');
-const prefix = 'http://www.officiallondontheatre.co.uk'
 var links = [];
+const prefix = 'http://www.officiallondontheatre.co.uk'
 
 
 function get(){

@@ -1,19 +1,21 @@
 #!/usr/bin/env node
 var express = require("express");
 var app = express();
-var spidy = require('./scrapy.js');
+var scrapy = require('./scrapy.js');
 
 var db = require("./db.js");
 
+scrapy.getShow();
+
 var fetch = function (){
-	var linkbot = require("./spooky.js");
-	linkbot.fetch(200);		
+	var spooky = require("./spooky.js");
+	spooky.fetch(200);		
 
 	setTimeout(function(){
 		var result = {
 			date: Date()
 		}
-		result.links = linkbot.links();
+		result.links = spooky.links();
 		db.logLinks(result);
 
 		getIndividuals(result.links);
@@ -24,7 +26,7 @@ var getIndividuals = function (links){
     console.log('================ Starting Individual.. ================')
     
     links.forEach(function(link){
-        spidy.run(link);
+        scrapy.getShow(link);
     });
 }
 
