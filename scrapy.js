@@ -3,10 +3,11 @@ var db = require('./db.js');
 const entities = require('entities');
 
 function getShow(url){
-  //var source = url || 'http://www.officiallondontheatre.co.uk/london-shows/show/item381804/anatomy-of-a-suicide/'
-  //var source = url || 'http://www.officiallondontheatre.co.uk/london-shows/show/item73606/wicked/'
+  // var source = url || 'http://www.officiallondontheatre.co.uk/london-shows/show/item381804/anatomy-of-a-suicide/'
+  // var source = url || 'http://www.officiallondontheatre.co.uk/london-shows/show/item73606/wicked/'
   //var source = url || 'http://www.officiallondontheatre.co.uk/london-shows/show/item372366/half-a-sixpence/'
-  var source = url || 'http://www.officiallondontheatre.co.uk/london-shows/show/item394161/around-the-world-in-80-days/'
+  // var source = url || 'http://www.officiallondontheatre.co.uk/london-shows/show/item394161/around-the-world-in-80-days/'
+  var source = url || 'http://www.officiallondontheatre.co.uk/london-shows/show/item116048/matilda-the-musical/'
 
   var showScheme =
       { name: {
@@ -29,7 +30,11 @@ function getShow(url){
         bookingUntil: '.show-Meta dl.hr-bottom dt:contains(Booking until) + dd',
         closing: '.show-Meta dl.hr-bottom dt:contains(Closing) + dd',
         twitter: { selector: '.twitter',
-          get: 'href' },
+          get: 'href',
+          transform: function(){
+            return this.substring(this.lastIndexOf('/') + 1, this.length).replace('@', '');
+          }
+        },
         facebook: { selector: '.facebook',
           get: 'href' } 
       };
