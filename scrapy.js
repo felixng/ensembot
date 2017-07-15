@@ -4,7 +4,9 @@ const entities = require('entities');
 
 function getShow(url){
   //var source = url || 'http://www.officiallondontheatre.co.uk/london-shows/show/item381804/anatomy-of-a-suicide/'
-  var source = url || 'http://www.officiallondontheatre.co.uk/london-shows/show/item73606/wicked/'
+  //var source = url || 'http://www.officiallondontheatre.co.uk/london-shows/show/item73606/wicked/'
+  //var source = url || 'http://www.officiallondontheatre.co.uk/london-shows/show/item372366/half-a-sixpence/'
+  var source = url || 'http://www.officiallondontheatre.co.uk/london-shows/show/item394161/around-the-world-in-80-days/'
 
   var showScheme =
       { name: {
@@ -19,18 +21,13 @@ function getShow(url){
           address: '.address',
           website: '#venue address a'
         },
-        genre: '.show-Meta dl.hr-bottom dd:nth-child(4)',
-        showTime: '.show-Meta dl.hr-bottom dd:nth-child(6)',
-        duration: '.show-Meta dl.hr-bottom dd:nth-child(8)',
-        previewFrom: '.show-Meta dl.hr-bottom dd:nth-child(10)',
-        openingNight: '.show-Meta dl.hr-bottom dd:nth-child(12)',
-        showingUntil: '.show-Meta dl.hr-bottom dd:nth-child(14)',
-        confirmedClosing: {
-          selector: '.show-Meta dl.hr-bottom dt:nth-child(13)',
-          transform: function(){
-            return (this.toString().indexOf('Closing') !== -1);
-          }
-        },
+        genre: '.show-Meta dl.hr-bottom dt:contains(Genre) + dd',
+        showTime: '.show-Meta dl.hr-bottom dt:contains(Show times) + dd',
+        duration: '.show-Meta dl.hr-bottom dt:contains(Duration) + dd',
+        previewFrom: '.show-Meta dl.hr-bottom dt:contains(Previews from) + dd',
+        openingNight: '.show-Meta dl.hr-bottom dt:contains(Opening night) + dd',
+        bookingUntil: '.show-Meta dl.hr-bottom dt:contains(Booking until) + dd',
+        closing: '.show-Meta dl.hr-bottom dt:contains(Closing) + dd',
         twitter: { selector: '.twitter',
           get: 'href' },
         facebook: { selector: '.facebook',
@@ -62,7 +59,7 @@ function getGroupDetails(show){
 
   scrapy.scrape(searchUrl, moreInfo, function(err, url) {
     if (err) return console.error(err);
-    if (url == null) return;
+    if (url == null) return db.process(show);
 
     var selectors = ['.groupsInfo p:contains(Groups)', 
                      '.groupsInfo p:contains(Valid)',
