@@ -36,9 +36,11 @@ var execute = function(show){
 	  upsertDocument(theatre, theatreCollection, db, function(id){
 	  	if (id){
 	  		show.theatre = id;
-		  	upsertDocument(show, productionsCollection, db, function(){
-			  	console.log('Upsert completed for ', show.name);
-		  	});
+	  		checkExistingProduction(show, db, function(updatedShow){
+	  			upsertDocument(updatedShow, productionsCollection, db, function(){
+				  	console.log('Upsert completed for ', show.name);
+			  	});
+	  		})
 	  	}
 	  })
 	});
@@ -53,11 +55,42 @@ var insertLinks = function(links, db, callback) {
   });
 }
 
-var upsertDocument = function (object, collectionName, db, callback) {
-	var collection = db.collection(collectionName);
+var checkExistingProduction = function (object, db, callback) {
+	var collection = db.collection(productionsCollection);
+	
 	object.lastModified = Math.floor(Date.now()).toString();
 
-	collection.updateOne({ name : object.name }, { $set: object }, { upsert: true },
+	collection.findOne({ name : object.name }, function(err, result){
+		if (err){
+			console.log(err);
+			return;
+		}
+
+		console.log('Found ', result);
+		if (result && result.overrideTwitter) {
+			object.overrideTwitter = true
+		}
+		else{
+			object.overrideTwitter = false;	
+		}
+
+		if (object.overrideTwitter) {
+			console.log('Override twitter for ', object.name);
+			delete object.twitter;
+		}
+
+		callback(object);
+	});
+}
+
+var upsertDocument = function (object, collectionName, db, callback) {
+	var collection = db.collection(collectionName);
+	var setOnInsert = { createdAt: Math.floor(Date.now()).toString(), };
+	object.lastModified = Math.floor(Date.now()).toString();
+
+	collection.updateOne({ name : object.name }, 
+						 { $set: object, $setOnInsert: setOnInsert }, 
+						 { upsert: true },
 		function(err, result) {
 			if (err){
 				console.log(err);
