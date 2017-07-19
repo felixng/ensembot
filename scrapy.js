@@ -2,6 +2,12 @@ var scrapy = require('node-scrapy');
 var db = require('./db.js');
 const entities = require('entities');
 
+//From 04.11.2017 -> 2017-11-04
+function parseDateString(date){
+  var array = date.split('.');
+  return array.reverse().join('-');
+}
+
 function getShow(url){
   // var source = url || 'http://www.officiallondontheatre.co.uk/london-shows/show/item381804/anatomy-of-a-suicide/'
   // var source = url || 'http://www.officiallondontheatre.co.uk/london-shows/show/item73606/wicked/'
@@ -25,10 +31,30 @@ function getShow(url){
         genre: '.show-Meta dl.hr-bottom dt:contains(Genre) + dd',
         showTime: '.show-Meta dl.hr-bottom dt:contains(Show times) + dd',
         duration: '.show-Meta dl.hr-bottom dt:contains(Duration) + dd',
-        previewFrom: '.show-Meta dl.hr-bottom dt:contains(Previews from) + dd',
-        openingNight: '.show-Meta dl.hr-bottom dt:contains(Opening night) + dd',
-        bookingUntil: '.show-Meta dl.hr-bottom dt:contains(Booking until) + dd',
-        closing: '.show-Meta dl.hr-bottom dt:contains(Closing) + dd',
+        previewFrom: {
+          selector: '.show-Meta dl.hr-bottom dt:contains(Previews from) + dd',
+          transform: function(){
+            return parseDateString(this);
+          }
+        },
+        openingNight: {
+          selector: '.show-Meta dl.hr-bottom dt:contains(Opening night) + dd',
+          transform: function(){
+            return parseDateString(this);
+          }
+        },
+        bookingUntil: {
+          selector: '.show-Meta dl.hr-bottom dt:contains(Booking until) + dd',
+          transform: function(){
+            return parseDateString(this);
+          }
+        },
+        closing: {
+          selector: '.show-Meta dl.hr-bottom dt:contains(Closing) + dd',
+          transform: function(){
+            return parseDateString(this);
+          }
+        },
         twitter: { selector: '.twitter',
           get: 'href',
           transform: function(){
