@@ -61,8 +61,10 @@ function getShow(url){
             return this.substring(this.lastIndexOf('/') + 1, this.length).replace('@', '');
           }
         },
-        facebook: { selector: '.facebook',
-          get: 'href' } 
+        facebook: { 
+          selector: '.facebook',
+          get: 'href' 
+        } 
       };
 
   scrapy.scrape(source, showScheme, function(err, show) {
@@ -152,7 +154,7 @@ function getGroupDetails(show){
           info: data.all
         };
         show.prices = prices;
-        show.group = true;
+        show.groupBookingAvailable = true;
 
         //Add some sort of manual review status?
       }

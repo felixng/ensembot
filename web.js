@@ -2,8 +2,11 @@
 var express = require("express");
 var app = express();
 var scrapy = require('./scrapy.js');
+var awin = require('./awin.js');
 
 var db = require("./db.js");
+
+// awin.unzip();
 
 // scrapy.getShow();
 var fetch = function (){
