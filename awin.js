@@ -1,11 +1,18 @@
-var request = require('request');
-var http = require("http");
-var url = require("url");
-var JSZip = require("jszip");
+const request = require('request');
+const http = require("http");
+const url = require("url");
+const JSZip = require("jszip");
 const csv = require('csvtojson');
+const db = require("./db.js");
+var awinFeed = process.env.AWIN_FEED_URL || '';
 
-function unzip(){
-	var req = http.get(url.parse("http://datafeed.api.productserve.com/datafeed/download/apikey/fb254e63aaef52ca79339f4cf2c571ee/language/en/fid/1936/columns/aw_deep_link,product_name,aw_product_id,merchant_product_id,merchant_image_url,description,merchant_category,search_price,merchant_name,merchant_id,category_name,category_id,aw_image_url,currency,store_price,delivery_cost,merchant_deep_link,language,last_updated,display_price,data_feed_id/format/csv/delimiter/%2C/compression/zip/adultcontent/1/"), function (res) {
+function fetchAffiliate(){ 
+	if (awinFeed == '') {
+		console.log('Error getting AWIN_FEED_URL!');
+		return;
+	}
+
+	var req = http.get(url.parse(awinFeed), function (res) {
 	  if (res.statusCode !== 200) {
 	    console.log(res.statusCode);
 	    return;
@@ -28,8 +35,7 @@ function unzip(){
 	      csv({noheader:false})
 			.fromString(text)
 			.on('json', (json) => {  //each row in csv as a json
-				console.log('==== json object ====');
-			    console.log(json);
+			    db.logAffiliate(json);
 			})
 			.on('done', () => {
 				console.log('completed');
@@ -47,5 +53,5 @@ function unzip(){
 
 
 module.exports = {
-  unzip: unzip,
+  fetch: fetchAffiliate,
 }

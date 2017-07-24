@@ -6,8 +6,6 @@ var awin = require('./awin.js');
 
 var db = require("./db.js");
 
-// awin.unzip();
-
 // scrapy.getShow();
 var fetch = function (){
 	var spooky = require("./spooky.js");
@@ -35,6 +33,7 @@ var getIndividuals = function (links){
 app.use(express.logger());
 
 app.get('/fetch', function(request, response) {
+    awin.fetch();
     fetch();
     response.send();
 });

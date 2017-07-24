@@ -3,6 +3,9 @@ var MongoClient = require('mongodb').MongoClient;
 var url = process.env.MONGODB_URI || 'mongodb://localhost:27017/ensemblr';
 const productionsCollection = 'productions';
 const theatreCollection = 'theatres';
+const affiliatesCollection = 'affiliates';
+const linksCollection = 'links';
+var Fuse = require("fuse.js");
 
 // var show = { name: 'Kinky Boots',
 //   theatre: 
@@ -18,6 +21,46 @@ const theatreCollection = 'theatres';
 //   confirmedClosing: false,
 //   twitter: 'https://twitter.com/KinkyBootsUK',
 //   facebook: 'https://www.facebook.com/KinkyBootsUK' };
+
+var logAffiliate = function(affiliate) {
+	MongoClient.connect(url, function(err, db) {
+		if (err){
+			console.log(err);
+			return;
+		}
+
+		if (db) {
+			// matchAffiliateToProduction(affiliate, db, function(){
+				insertAffiliate(affiliatesCollection, affiliate, db, function(){
+					console.log('Affiliate logged');
+				})
+			// })
+		}
+	}); 
+}
+
+var matchAffiliateToProduction = function(affiliate, db, callback){
+	var collection = db.collection(productionsCollection);
+	collection.find({}).toArray(function(err, productions){
+		if (err){
+			console.log(err);
+			return;
+		}
+
+		var options = {
+		  // keys: ['name', 'author'],
+		  keys: ['name'],
+		  id: 'name'
+		}
+
+		var fuse = new Fuse(productions, options);
+		console.log('search keyword ', affiliate.product_name);
+		console.log('search result ', fuse.search(affiliate.product_name));
+		affiliate.production = fuse.search(affiliate.product_name);
+
+		// callback(result);
+	});
+}
 
 var logLinks = function(links) {
 	MongoClient.connect(url, function(err, db) {
@@ -46,8 +89,24 @@ var execute = function(show){
 	});
 }
 
+var insertAffiliate = function(collectionName, doc, db, callback) {
+  var collection = db.collection(collectionName);
+
+  collection.updateOne({ aw_product_id : doc.aw_product_id }, 
+						 { $set: doc }, 
+						 { upsert: true },
+		function(err, result) {
+			if (err){
+				console.log(err);
+				return;
+			}
+
+			callback();
+		});  
+}
+
 var insertLinks = function(links, db, callback) {
-  var collection = db.collection('links');
+  var collection = db.collection(linksCollection);
   links.lastModified = Math.floor(Date.now()).toString();
 
   collection.insertOne(links, function(err, result) {
@@ -147,4 +206,5 @@ function iterAll(object) {
 module.exports = {
 	process: execute,
 	logLinks: logLinks,
+	logAffiliate: logAffiliate,
 };
