@@ -162,6 +162,8 @@ function getGroupDetails(show){
         show.group = false;
       }
 
+      show.location = 'London';
+
       db.process(show);
     });
   });
