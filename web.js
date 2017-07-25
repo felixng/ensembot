@@ -7,7 +7,7 @@ var awin = require('./awin.js');
 
 var db = require("./db.js");
 
-awin.fetch();
+// awin.fetch();
 // scrapy.getShow();
 var fetch = function (){
 	var spooky = require("./spooky.js");
