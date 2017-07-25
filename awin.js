@@ -4,6 +4,7 @@ const url = require("url");
 const JSZip = require("jszip");
 const csv = require('csvtojson');
 const db = require("./db.js");
+const getSymbolFromCurrency = require('currency-symbol-map');
 var awinFeed = process.env.AWIN_FEED_URL || '';
 
 function fetchAffiliate(){ 
@@ -35,6 +36,11 @@ function fetchAffiliate(){
 	      csv({noheader:false})
 			.fromString(text)
 			.on('json', (json) => {  //each row in csv as a json
+				var currency = json.currency;
+				if (currency){
+					json.display_price = json.display_price.replace(currency, getSymbolFromCurrency(currency));
+				}
+				
 			    db.logAffiliate(json);
 			})
 			.on('done', () => {
